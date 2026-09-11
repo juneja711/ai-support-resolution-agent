@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Customer Support & Resolution Agent</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Top Navigation Bar -->
+        <nav class="top-nav">
+            <div class="brand">
+                <span class="brand-icon">🤖</span>
+                <div class="brand-text">
+                    <span class="brand-title">NovaTech Resolution Agent</span>
+                    <span class="brand-subtitle">LangGraph ReAct • ChromaDB RAG • SQLite Tools</span>
+                </div>
+            </div>
+            
+            <div class="nav-tabs">
+                <button class="nav-tab active" id="tabChatBtn" onclick="switchTab('chat')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    <span>Support Chat</span>
+                </button>
+                <button class="nav-tab" id="tabDashboardBtn" onclick="switchTab('dashboard')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    <span>Agent Dashboard</span>
+                    <span class="badge live-badge">LIVE</span>
+                </button>
+            </div>
+
+            <div class="nav-status">
+                <span class="status-dot"></span>
+                <span>System Ready</span>
+            </div>
+        </nav>
+
+        <!-- VIEW 1: SUPPORT CHAT -->
+        <main class="view-panel active" id="chatView">
+            <div class="chat-container">
+                <!-- Chat Sub-header -->
+                <div class="chat-meta-bar">
+                    <div class="session-info">
+                        <span class="meta-label">Memory Thread:</span>
+                        <span class="session-id-tag" id="currentSessionDisplay">session-init</span>
+                    </div>
+                    <div class="chat-controls">
+                        <button class="btn-sm" onclick="startNewConversation()" title="Reset session memory">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
+                            New Chat
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Scenario Suggestion Chips -->
+                <div class="chips-bar">
+                    <span class="chips-title">Try Scenarios:</span>
+                    <div class="chips-list">
+                        <button class="chip" onclick="sendQuickMessage('My order 1003 hasn\'t arrived and I want a refund.')">
+                            🧠 Multi-Step: Order 1003 Not Arrived & Refund
+                        </button>
+                        <button class="chip" onclick="sendQuickMessage('Where is my order 1001?')">
+                            📦 Track Order 1001
+                        </button>
+                        <button class="chip" onclick="sendQuickMessage('Can you cancel it?')">
+                            🔄 Memory Test: "Cancel it"
+                        </button>
+                        <button class="chip urgent-chip" onclick="sendQuickMessage('I\'ve tried everything and I want a human.')">
+                            🚨 Human Escalation
+                        </button>
+                        <button class="chip" onclick="sendQuickMessage('What is your return policy?')">
+                            📄 Store Return Policy (RAG)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages Stream -->
+                <div class="messages-stream" id="chatMessages">
+                    <div class="message-row bot">
+                        <div class="msg-avatar">🤖</div>
+                        <div class="msg-bubble">
+                            <div class="msg-header">
+                                <span class="sender-name">NovaTech Resolution Agent</span>
+                                <span class="msg-time" id="initTime">Just now</span>
+                            </div>
+                            <div class="msg-body">
+                                Hello! 👋 I am your automated Customer Support & Resolution Assistant.
+                                <br><br>
+                                I can autonomously reason through complex inquiries, track orders, process policy-governed cancellations, check refund eligibility, and escalate to our human team whenever needed.
+                            </div>
+                            <div class="msg-footer">
+                                <span class="tag-pill welcome">AUTONOMOUS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Typing indicator -->
+                <div class="typing-bar" id="typingIndicator" style="display: none;">
+                    <div class="typing-bubble">
+                        <span class="bounce-dot"></span>
+                        <span class="bounce-dot"></span>
+                        <span class="bounce-dot"></span>
+                        <span class="typing-label">Agent is reasoning & querying tools...</span>
+                    </div>
+                </div>
+
+                <!-- Input area -->
+                <div class="input-container">
+                    <form id="chatForm" onsubmit="handleFormSubmit(event)">
+                        <input 
+                            type="text" 
+                            id="userInput" 
+                            placeholder="Ask anything (e.g. My order 1003 hasn't arrived and I want a refund)..." 
+                            autocomplete="off" 
+                            required 
+                        />
+                        <button type="submit" id="sendBtn">
+                            <span>Send</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <!-- VIEW 2: AGENT DASHBOARD -->
+        <main class="view-panel" id="dashboardView">
+            <div class="dashboard-container">
+                <!-- Dashboard Action Header -->
+                <div class="dashboard-header">
+                    <div>
+                        <h2>Agent Operations Dashboard</h2>
+                        <p class="text-secondary">Real-time SQLite database inspection, human escalation queue & agent execution traces.</p>
+                    </div>
+                    <div class="dashboard-actions">
+                        <button class="btn-outline" onclick="loadDashboardData()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                            Refresh
+                        </button>
+                        <button class="btn-danger-outline" onclick="resetDatabaseDemo()">
+                            ⚡ Reset Demo Database
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Metric Cards Grid -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <span class="kpi-title">Total Orders</span>
+                        <span class="kpi-value" id="statTotalOrders">-</span>
+                        <span class="kpi-sub" id="statProcessingOrders">Processing: -</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-title">Delivered Orders</span>
+                        <span class="kpi-value text-green" id="statDeliveredOrders">-</span>
+                        <span class="kpi-sub">Eligible for return</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-title">Total Support Tickets</span>
+                        <span class="kpi-value" id="statTotalTickets">-</span>
+                        <span class="kpi-sub">Across all tiers</span>
+                    </div>
+                    <div class="kpi-card highlight-card">
+                        <span class="kpi-title">Human Escalations</span>
+                        <span class="kpi-value text-urgent" id="statEscalatedTickets">-</span>
+                        <span class="kpi-sub">Assigned to Human Queue</span>
+                    </div>
+                </div>
+
+                <!-- Database Tables Grid -->
+                <div class="dashboard-tables-grid">
+                    <!-- Orders Table -->
+                    <div class="table-card">
+                        <div class="table-card-header">
+                            <h3>📦 Orders Database (SQLite)</h3>
+                            <span class="badge count-badge" id="ordersCountBadge">0</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Customer</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ordersTableBody">
+                                    <tr><td colspan="5" class="text-center">Loading orders...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Support Tickets Table -->
+                    <div class="table-card">
+                        <div class="table-card-header">
+                            <h3>🎫 Support Tickets & Escalations</h3>
+                            <span class="badge count-badge" id="ticketsCountBadge">0</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Assigned Agent</th>
+                                        <th>Issue / Reason</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ticketsTableBody">
+                                    <tr><td colspan="5" class="text-center">Loading tickets...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Agent Reasoning Trace Stream -->
+                <div class="trace-card">
+                    <div class="trace-card-header">
+                        <h3>🔍 Live Agent Decision-Making & Tool Execution Stream</h3>
+                        <span class="badge trace-badge">REAL-TIME AUDIT</span>
+                    </div>
+                    <div class="trace-stream" id="traceStream">
+                        <div class="trace-placeholder">Activity will appear here as the AI reasons, calls tools, and executes queries...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

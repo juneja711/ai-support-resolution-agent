@@ -1,0 +1,18 @@
+﻿# NovaTech Shipping and Delivery Policy
+
+1. Shipping Methods & Delivery Times
+- Standard Shipping: Delivery takes between 3 to 7 business days following dispatch.
+- Expedited Shipping: Delivery takes between 1 to 2 business days following dispatch.
+- Orders placed before 2:00 PM EST Monday through Friday are processed and dispatched on the same business day.
+
+2. Shipping Rates
+- Orders with a subtotal of $50.00 or more qualify for Free Standard Shipping across the continental US.
+- Standard shipping for orders under $50.00 is a flat rate of $4.99.
+- Expedited 2-Day Shipping is available at checkout for $14.99.
+
+3. Tracking Your Order
+- A shipping confirmation email with a live tracking number is sent automatically as soon as your order leaves our warehouse.
+- You can also check real-time order status directly through our AI Support Assistant by providing your Order ID.
+
+4. Damaged or Lost Shipments
+- If your package arrives damaged or does not arrive within 10 business days of the shipping date, please notify customer support to open an investigation and request a replacement or refund.

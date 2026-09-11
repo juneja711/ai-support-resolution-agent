@@ -1,0 +1,15 @@
+﻿# NovaTech Order Cancellation Policy
+
+1. Cancellation Eligibility
+- Orders can be cancelled free of charge ONLY while their status is 'Processing' (prior to warehouse fulfillment and shipment dispatch).
+- Once an order status changes to 'Shipped', cancellation is no longer possible because the parcel is in transit with the logistics carrier.
+
+2. How to Cancel an Order
+- Customers can cancel an order directly through our AI Support Assistant by requesting cancellation and supplying the Order ID (e.g., "Please cancel order 1003").
+- Alternatively, customers may contact human support through a support ticket.
+
+3. Post-Shipment Options
+- If your order has already shipped and you no longer desire the item, please wait until the package is delivered and initiate a return in accordance with our 30-day Return Policy.
+
+4. Cancellation Refunds
+- When an eligible processing order is cancelled, a full refund including any taxes and shipping charges is automatically credited to the original payment method immediately.
